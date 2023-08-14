@@ -32,75 +32,104 @@
                                     <input type="text" id="form3Example8" class="form-control form-control-lg" />
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
+                                <div class="col-md-6 mb-4">
+                                    <select>
+                                        <option value="Elejir provincia">Elegir provincia</option>
+                                        <option value="Buenos Aires">Buenos Aires</option>
+                                        <option value="Catamarca">Catamarca</option>
+                                        <option value="Chaco">Chaco</option>
+                                        <option value="Chubut">Chubut</option>
+                                        <option value="Córdoba">Córdoba</option>
+                                        <option value="Corrientes">Corrientes</option>
+                                        <option value="Entre Ríos">Entre Ríos</option>
+                                        <option value="Formosa">Formosa</option>
+                                        <option value="Jujuy">Jujuy</option>
+                                        <option value="La Pampa">La Pampa</option>
+                                        <option value="La Rioja">La Rioja</option>
+                                        <option value="Mendoza">Mendoza</option>
+                                        <option value="Misiones">Misiones</option>
+                                        <option value="Neuquén">Neuquén</option>
+                                        <option value="Río Negro">Río Negro</option>
+                                        <option value="Salta">Salta</option>
+                                        <option value="San Juan">San Juan</option>
+                                        <option value="San Luis">San Luis</option>
+                                        <option value="Santa Cruz">Santa Cruz</option>
+                                        <option value="Santa Fe">Santa Fe</option>
+                                        <option value="Santiago del Estero">Santiago del Estero</option>
+                                        <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                        <option value="Tucumán">Tucumán</option>
+                                    </select>
 
-                                        <select class="select">
-                                            <option value="1">State</option>
-                                            <option value="2">Option 1</option>
-                                            <option value="3">Option 2</option>
-                                            <option value="4">Option 3</option>
-                                        </select>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <select class="select">
-                                            <option value="1">City</option>
-                                            <option value="2">Option 1</option>
-                                            <option value="3">Option 2</option>
-                                            <option value="4">Option 3</option>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <div class="form-outline mb-4">
-                                    <input type="text" id="form3Example9" class="form-control form-control-lg" />
-                                    <label class="form-label" for="form3Example9">DOB</label>
-                                </div>
-
-                                <div class="form-outline mb-4">
-                                    <input type="text" id="form3Example90" class="form-control form-control-lg" />
-                                    <label class="form-label" for="form3Example90">Pincode</label>
-                                </div>
-
-                                <div class="form-outline mb-4">
-                                    <input type="text" id="form3Example99" class="form-control form-control-lg" />
-                                    <label class="form-label" for="form3Example99">Course</label>
-                                </div>
-
-                                <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
-
-                                    <h6 class="mb-0 me-4">Gender: </h6>
-
-                                    <div class="form-check form-check-inline mb-0 me-4">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="femaleGender" value="option1" />
-                                        <label class="form-check-label" for="femaleGender">Female</label>
-                                    </div>
-
-                                    <div class="form-check form-check-inline mb-0 me-4">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="maleGender" value="option2" />
-                                        <label class="form-check-label" for="maleGender">Male</label>
-                                    </div>
-
-                                    <div class="form-check form-check-inline mb-0">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="otherGender" value="option3" />
-                                        <label class="form-check-label" for="otherGender">Other</label> </br>
-                                    </div>  
-
-                                    <div class="d-flex justify-content-end pt-3">
-                                        <button type="button" class="btn btn-light btn-lg">Reset all</button>
-                                        <button type="button" class="btn btn-warning btn-lg ms-2">Submit form</button>
-                                    </div>
 
                                 </div>
-
                             </div>
+
+                            <form>
+                                <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                                <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+                            </form>
+
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="form3Example99">Telefono:</label>
+                                <input type="text" id="form3Example99" class="form-control form-control-lg" />
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="form3Example99">Correo electronico:</label>
+                                <input type="text" id="form3Example99" class="form-control form-control-lg" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label" for="form3Example9">Contraseña: </label>
+                                <div class="input-group">
+                                    <input type="password" id="form3Example9" class="form-control form-control-lg">
+                                    <button id="togglePassword" class="btn btn-outline-secondary" type="button">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <p class="warning" style="color: red; display: none;">La contraseña debe contener al menos un número.</p>
+                                <p class="warning" style="color: red; display: none;">La contraseña debe contener al menos una letra mayúscula.</p>
+                                <p id="lengthCounter" style="display: none;">Longitud de contraseña: <span id="lengthValue">0</span></p>
+                            </div>
+
+                            <script>
+                                const passwordInput = document.getElementById('form3Example9');
+                                const togglePasswordButton = document.getElementById('togglePassword');
+                                const warnings = document.querySelectorAll('.warning');
+                                const lengthValue = document.getElementById('lengthValue');
+
+                                togglePasswordButton.addEventListener('click', () => {
+                                    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+                                });
+
+                                passwordInput.addEventListener('input', () => {
+                                    const password = passwordInput.value;
+                                    const hasUppercase = /[A-Z]/.test(password);
+                                    const hasNumber = /\d/.test(password);
+
+                                    warnings[0].style.display = hasNumber ? 'none' : 'block';
+                                    warnings[1].style.display = hasUppercase ? 'none' : 'block';
+
+                                    lengthValue.textContent = password.length;
+                                    lengthCounter.style.display = 'block';
+                                    lengthValue.style.color = password.length > 8 ? 'green' : 'black';
+                                });
+                            </script>
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+                            <br>
+                            <div class="d-flex justify-content-end pt-3">
+                                <button type="button" class="btn btn-warning btn-lg ms-2">Registrarse</button>
+                            </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    </div>
     </div>
 </section>
