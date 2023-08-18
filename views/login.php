@@ -9,10 +9,6 @@
             <span class="text-primary">for your business</span>
           </h1>
           <p style="color: hsl(217, 10%, 50.8%)">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Eveniet, itaque accusantium odio, soluta, corrupti aliquam
-            quibusdam tempora at cupiditate quis eum maiores libero
-            veritatis? Dicta facilis sint aliquid ipsum atque?
           </p>
         </div>
 
@@ -42,7 +38,7 @@
 
                 <div class="form-outline mb-4">
                   <input type="password" id="form3Example4" class="form-control" />
-                  <label class="form-label" for="form3Example4">Password</label>
+                  <label class="form-label" for="form3Example4">Contraseña</label>
                 </div>
 
                 <div class="form-check d-flex justify-content-center mb-4">
@@ -81,6 +77,4 @@
       </div>
     </div>
   </div>
-  <!-- Jumbotron -->
 </section>
-<!-- Section: Design Block -->
