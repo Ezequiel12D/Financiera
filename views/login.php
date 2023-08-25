@@ -5,7 +5,7 @@
       <div class="row gx-lg-5 align-items-center">
         <div class="col-lg-6 mb-5 mb-lg-0">
           <h1 class="my-5 display-3 fw-bold ls-tight">
-            The best offer <br />
+            fede gay <br/>
             <span class="text-primary">for your business</span>
           </h1>
           <p style="color: hsl(217, 10%, 50.8%)">
@@ -20,13 +20,13 @@
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
                       <input type="text" id="form3Example1" class="form-control" />
-                      <label class="form-label" for="form3Example1">Primer Nombre</label>
+                      <label class="form-label" for="form3Example1">Nombre/s</label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
                       <input type="text" id="form3Example2" class="form-control" />
-                      <label class="form-label" for="form3Example2">Apellido</label>
+                      <label class="form-label" for="form3Example2">Apellido/s</label>
                     </div>
                   </div>
                 </div>
