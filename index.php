@@ -2,7 +2,6 @@
 
 require_once 'controller/FinancieraController.php';
 
-
 $controller = new FinancieraController();
 
 $action = $_GET['action'] ?? 'inicio'; 
@@ -18,4 +17,4 @@ switch ($action) {
         $controller->inicio();
         break;
 }
-?>
+?>  
