@@ -13,9 +13,10 @@
         <h1>Financiera XYZ</h1>
         <nav>
             <ul>
-                <li><a href="index.php">Inicio</a></li>
-                <li><a href="solicitud_prestamos.php">Solicitar Préstamo</a></li>
                 <li><a href="historial_prestamos.php">Historial de Préstamos</a></li>
+                <li><a href="login.php">Iniciar Sesión</a></li>
+                <li><a href="register.php">Registrarse</a></li>
+                <li><a href="calculadora_prestamos.php">Calculadora de Prestamos</a></li>
             </ul>
         </nav>
     </header>
