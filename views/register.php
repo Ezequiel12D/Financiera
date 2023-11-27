@@ -6,7 +6,7 @@
                 <div class="card card-registration my-4">
                     <div class="row g-0">
                         <div class="col-xl-6 d-none d-xl-block">
-                            <img src="" alt="Sample photo" class="img-fluid" style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+                            <img src="../img/gestion-financiera.jpg" alt="Sample photo" class="img-register" style="margin-top:70px; right:10px; padding: 10px; border-radius: 25px;" />
                         </div>
                         <div class="col-xl-6">
                             <div class="card-body p-md-5 text-black">
@@ -120,7 +120,7 @@
 
                             <br>
                             <div class="d-flex justify-content-end pt-3">
-                                <button type="button" class="btn btn-warning btn-lg ms-2">Registrarse</button>
+                                <button type="button" class="btn btn-warning btn-lg ms-2 ">Registrarse</button>
                             </div>
 
                         </div>
