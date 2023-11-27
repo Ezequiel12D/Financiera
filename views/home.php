@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if (isset($_SESSION['mensaje'])) {
+    echo $_SESSION['mensaje'];
+    unset($_SESSION['mensaje']);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -30,15 +40,6 @@
     <section id="about">
         <h2>Acerca de Nosotros</h2>
         <p>Somos una financiera comprometida a proporcionar servicios financieros confiables y accesibles.</p>
-    </section>
-
-    <section id="services">
-        <h2>Nuestros Servicios</h2>
-        <ul>
-            <li>Préstamos Personales</li>
-            <li>Préstamos Hipotecarios</li>
-            <li>Cuentas de Ahorro</li>
-        </ul>
     </section>
 
     <footer>
