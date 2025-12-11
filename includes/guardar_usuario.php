@@ -1,34 +1,61 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST['nombre'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $contraseña = $_POST['contraseña'] ?? '';
-    $apellido = $_POST['apellido'] ?? '';
-    $dni = $_POST['dni'] ?? '';
-    $telefono = $_POST['telefono'] ?? '';
-    $provincia = $_POST['provincia'] ?? '';
-    $fecha_nacimiento = $_POST['fechaNacimiento'] ?? '';
+
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
+    $dni = $_POST['dni'];
+    $telefono = $_POST['telefono'];
+    $provincia = $_POST['provincia'];
+    $fecha_nacimiento = $_POST['fechaNacimiento'];
+    $email = $_POST['email'];
+    $pass = $_POST['contrasena'];
+
     $conexion = new mysqli("localhost", "root", "", "financiera");
 
     if ($conexion->connect_error) {
         die("Conexión fallida: " . $conexion->connect_error);
     }
-    echo "Correo electrónico ingresado: " . $email;
 
-    $checkEmailQuery = "SELECT COUNT(*) as count FROM usuarios WHERE email = '$email'";
-    $result = $conexion->query($checkEmailQuery);
-    $row = $result->fetch_assoc();
+    $stmt = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
 
-    if ($row['count'] > 0) {
-        echo '<p style="color: red;">Error: El correo electrónico ya está registrado</p>';
-    } else {
-        $sql = "INSERT INTO usuarios (nombre, email, `contraseña`, apellido, dni, telefono, provincia, fecha_nacimiento) VALUES ('$nombre', '$email', '$contraseña', '$apellido', '$dni', '$telefono', '$provincia', '$fecha_nacimiento')";
-
-        $resultado = $conexion->query($sql);
-
+    if ($count > 0) {
+        echo "<script>alert('El email ya está registrado'); window.location='../views/register.php';</script>";
+        exit;
     }
 
-    $conexion->close(); 
-    header("Location:../views/home.php");
+    $stmt = $conexion->prepare("INSERT INTO usuarios 
+    (nombre, apellido, dni, telefono, provincia, fecha_nacimiento, email, contrasena, saldo)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+
+    $pass = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
+
+    $stmt = $conexion->prepare("INSERT INTO usuarios 
+(nombre, apellido, dni, telefono, provincia, fecha_nacimiento, email, contrasena, saldo)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+
+    $stmt->bind_param(
+        "ssssssss",
+        $nombre,
+        $apellido,
+        $dni,
+        $telefono,
+        $provincia,
+        $fecha_nacimiento,
+        $email,
+        $pass
+    );
+    if ($stmt->execute()) {
+        echo "<script>alert('Usuario registrado con éxito'); window.location='../views/login.php';</script>";
+    } else {
+        echo "Error al guardar: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conexion->close();
 }
 ?>

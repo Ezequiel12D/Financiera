@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-12-2023 a las 18:14:03
+-- Tiempo de generación: 11-12-2025 a las 21:38:42
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -106,7 +106,7 @@ CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `contrasena` varchar(255) NOT NULL,
+  `contrasena` varchar(255) DEFAULT NULL,
   `saldo` decimal(10,2) NOT NULL,
   `apellido` varchar(255) NOT NULL,
   `dni` varchar(20) NOT NULL,
@@ -120,7 +120,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `email`, `contrasena`, `saldo`, `apellido`, `dni`, `telefono`, `provincia`, `fecha_nacimiento`) VALUES
-(1, '', '', '', '0.00', '', '', '', '', '2004-04-06');
+(15, 'Ezequiel Matias', 'patatososa12@gmail.com', '$2y$10$CqKbLQCDJc3WQf4o.wYRBOwRTR2xLvRWTADwpnH7IyIu3sYMskKfe', '0.00', 'Pérez', '46752695', '1159139848', 'Buenos Aires', '2005-06-07'),
+(16, 'Ezequiel Matias', 'Ezequiel.sosa.et26@gmail.com', '$2y$10$O4WYluE8XlNvK/PskG930uBC4Obp/JGprdXuezma.99grdR37ZMs6', '0.00', 'Sosa', '46752695', '1159139848', 'Buenos Aires', '2005-06-07'),
+(17, 'Ezequiel Matias', 'camybelensosa@gmail.com', '$2y$10$BSEVzTygM2kPFWhb/kfN9.z7FLlgZ/VtqWudScT9rV4aIO9UpcPB2', '0.00', 'Sosa', '46752695', '1159139848', 'Buenos Aires', '2001-08-08');
 
 --
 -- Índices para tablas volcadas
@@ -206,7 +208,7 @@ ALTER TABLE `transacciones`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Restricciones para tablas volcadas
