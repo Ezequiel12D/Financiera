@@ -7,15 +7,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $email = $_POST['email'];
   $contrasena = $_POST['contrasena'];
 
-  $stmt = $conn->prepare("SELECT id, contrasena FROM usuarios WHERE email = ?");
+  $stmt = $conn->prepare("SELECT id, contrasena, rol FROM usuarios WHERE email = ?");
   $stmt->bind_param("s", $email);
   $stmt->execute();
-  $stmt->bind_result($usuario_id, $hashed_password);
+  $stmt->bind_result($usuario_id, $hashed_password, $rol);
   $stmt->fetch();
   $stmt->close();
 
   if ($usuario_id && password_verify($contrasena, $hashed_password)) {
     $_SESSION['usuario_id'] = $usuario_id;
+    $_SESSION['rol'] = $rol;
     header("Location: home.php");
     exit();
   } else {
@@ -24,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -60,12 +62,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <div class="form-outline mb-4">
                       <label class="form-label" for="email">E-mail:</label>
-                      <input type="text" id="email" name="email" class="form-control" placeholder="Ingrese aquí" required />
+                      <input type="text" id="email" name="email" class="form-control" placeholder="Ingrese aquí"
+                        required />
                     </div>
 
                     <div class="form-outline mb-4">
                       <label class="form-label" for="contrasena">Contraseña:</label>
-                      <input type="password" id="contrasena" name="contrasena" class="form-control" placeholder="Ingrese aquí" required />
+                      <input type="password" id="contrasena" name="contrasena" class="form-control"
+                        placeholder="Ingrese aquí" required />
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block mb-4">

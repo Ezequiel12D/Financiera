@@ -1,13 +1,36 @@
 <?php
-include '../includes/db.php';
 session_start();
+include '../includes/db.php';
 
+/* Verificar login */
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
 }
-$sql = "SELECT * FROM solicitudes_prestamos";
-$result = $conn->query($sql);
+
+$usuario_id = $_SESSION['usuario_id'];
+
+/* Obtener solicitudes del usuario */
+$sql = "
+SELECT 
+    sp.id,
+    pf.nombre AS producto,
+    sp.monto_solicitado,
+    sp.monto_total,
+    sp.cuota_mensual,
+    sp.estado,
+    sp.plazo_meses,
+    sp.fecha_solicitud
+FROM solicitudes_prestamos sp
+JOIN productos_financieros pf ON sp.producto_id = pf.id
+WHERE sp.usuario_id = ?
+ORDER BY sp.fecha_solicitud DESC
+";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $usuario_id);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -15,65 +38,67 @@ $result = $conn->query($sql);
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
-    <title>Historial de Préstamos</title>
+    <title>Mis Préstamos</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
 </head>
 
-<body>
-    <h2>Historial de Préstamos</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>ID de Usuario</th>
-            <th>ID de Producto</th>
-            <th>Monto Solicitado</th>
-            <th>Estado</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>DNI</th>
-            <th>Tipo de Empleo</th>
-            <th>Ingresos Mensuales</th>
-            <th>Motivo del Préstamo</th>
-        </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td>
-                    <?php echo $row['id']; ?>
-                </td>
-                <td>
-                    <?php echo $row['usuario_id']; ?>
-                </td>
-                <td>
-                    <?php echo $row['producto_id']; ?>
-                </td>
-                <td>
-                    <?php echo $row['monto_solicitado']; ?>
-                </td>
-                <td>
-                    <?php echo $row['estado']; ?>
-                </td>
-                <td>
-                    <?php echo $row['nombre']; ?>
-                </td>
-                <td>
-                    <?php echo $row['apellido']; ?>
-                </td>
-                <td>
-                    <?php echo $row['dni']; ?>
-                </td>
-                <td>
-                    <?php echo $row['tipo_empleo']; ?>
-                </td>
-                <td>
-                    <?php echo $row['ingresos_mensuales']; ?>
-                </td>
-                <td>
-                    <?php echo $row['motivo_prestamo']; ?>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-    </table>
+<body class="container mt-4">
+
+    <h2 class="mb-4">Mis Solicitudes de Préstamo</h2>
+
+    <?php if ($result->num_rows === 0): ?>
+        <div class="alert alert-info">
+            Todavía no realizaste ninguna solicitud.
+        </div>
+    <?php else: ?>
+
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Monto</th>
+                    <th>Plazo</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Cuota</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= $row['id'] ?></td>
+                        <td><?= $row['producto'] ?></td>
+                        <td>$<?= number_format($row['monto_solicitado'], 2, ',', '.') ?></td>
+                        <td><?= $row['plazo_meses'] ?> meses</td>
+                        <td>
+                            <span class="badge 
+                    <?= $row['estado'] == 'pendiente' ? 'bg-warning' :
+                        ($row['estado'] == 'aprobado' ? 'bg-success' : 'bg-danger') ?>">
+                                <?= ucfirst($row['estado']) ?>
+                            </span>
+                        </td>
+                        <td><?= $row['fecha_solicitud'] ?></td>
+                    </tr>
+                    <td>
+                        <?= $row['monto_total'] ? '$' . number_format($row['monto_total'], 2, ',', '.') : '-' ?>
+                    </td>
+                    <td>
+                        <?= $row['cuota_mensual'] ? '$' . number_format($row['cuota_mensual'], 2, ',', '.') : '-' ?>
+                    </td>
+
+                <?php endwhile; ?>
+
+            </tbody>
+        </table>
+
+    <?php endif; ?>
+
+    <a href="home.php" class="btn btn-secondary mt-3">⬅ Volver al Home</a>
+
 </body>
 
 </html>
