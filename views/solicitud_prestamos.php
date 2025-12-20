@@ -135,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         color:white;
         text-decoration:none;
         font-weight:bold;
-    ">⬅ Volver al Home</a>
+    "> Volver al Home</a>
     </div>
 
 </body>

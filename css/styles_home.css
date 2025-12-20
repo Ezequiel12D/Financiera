@@ -58,11 +58,12 @@ footer {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 1em 0;
+    padding: 0.5em 0;  /* antes era 1em */
+    font-size: 0.9em;   /* un poco más pequeño */
     position: fixed;
     bottom: 0;
     width: 100%;
-}
+} 
 
 @media only screen and (max-width: 600px) {
     nav ul {
@@ -117,4 +118,60 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #2980b9;
+}
+/* Ajustes para sección de perfil */
+.registration-section {
+    max-width: 700px;
+    margin: 2em auto;
+    padding: 2em;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-registration {
+    border: none;
+}
+
+.card-body h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5em;
+    font-size: 1.8em;
+}
+
+.form-control-lg, .select-control {
+    width: 100%;
+    padding: 0.8em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    margin-top: 0.3em;
+}
+
+button.btn-register {
+    background-color: #3498db;
+    color: white;
+    font-size: 1.1em;
+    padding: 0.8em 2em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 1em auto 0;
+}
+
+button.btn-register:hover {
+    background-color: #2980b9;
+}
+
+.alert-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 0.8em 1em;
+    margin-bottom: 1em;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #c3e6cb;
 }

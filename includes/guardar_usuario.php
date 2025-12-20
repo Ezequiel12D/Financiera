@@ -16,27 +16,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Conexión fallida: " . $conexion->connect_error);
     }
 
+    // Verificar email
     $stmt = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->bind_result($count);
+    $stmt->bind_result($count_email);
     $stmt->fetch();
     $stmt->close();
 
-    if ($count > 0) {
+    if ($count_email > 0) {
         echo "<script>alert('El email ya está registrado'); window.location='../views/register.php';</script>";
         exit;
     }
 
-    $stmt = $conexion->prepare("INSERT INTO usuarios 
-    (nombre, apellido, dni, telefono, provincia, fecha_nacimiento, email, contrasena, saldo)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+    // Verificar DNI
+    $stmt = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE dni = ?");
+    $stmt->bind_param("s", $dni);
+    $stmt->execute();
+    $stmt->bind_result($count_dni);
+    $stmt->fetch();
+    $stmt->close();
 
-    $pass = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
+    if ($count_dni > 0) {
+        echo "<script>alert('El DNI ya está registrado'); window.location='../views/register.php';</script>";
+        exit;
+    }
+
+    // Insertar usuario
+    $pass_hash = password_hash($pass, PASSWORD_DEFAULT);
 
     $stmt = $conexion->prepare("INSERT INTO usuarios 
-(nombre, apellido, dni, telefono, provincia, fecha_nacimiento, email, contrasena, saldo)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
+        (nombre, apellido, dni, telefono, provincia, fecha_nacimiento, email, contrasena, saldo)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
 
     $stmt->bind_param(
         "ssssssss",
@@ -47,8 +58,9 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
         $provincia,
         $fecha_nacimiento,
         $email,
-        $pass
+        $pass_hash
     );
+
     if ($stmt->execute()) {
         echo "<script>alert('Usuario registrado con éxito'); window.location='../views/login.php';</script>";
     } else {

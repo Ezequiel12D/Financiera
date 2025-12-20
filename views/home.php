@@ -34,14 +34,14 @@ if (isset($_SESSION['mensaje'])) {
 
                         <li>
                             <a href="historial_prestamos.php" class="btn btn-info">
-                                📄 Mis préstamos
+                                Mis préstamos
                             </a>
                         </li>
 
                         <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
                             <li>
                                 <a href="admin_solicitudes.php" class="btn btn-danger">
-                                    🛠 Panel Admin
+                                    Panel Admin
                                 </a>
                             </li>
                         <?php endif; ?>

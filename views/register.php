@@ -43,7 +43,8 @@
 
                         <div class="form-group mb-3">
                             <label>DNI:</label>
-                            <input type="text" name="dni" class="form-control-lg" required>
+                            <input type="text" name="dni" id="dni" class="form-control-lg" required>
+                            <small id="dni-error" style="color:red; display:none;">Este DNI ya está registrado</small>
                         </div>
 
                         <div class="form-group mb-3">
@@ -84,6 +85,7 @@
         </section>
     </form>
 
+    <script src="../js/validar_dni.js"></script>
 </body>
 
 </html>

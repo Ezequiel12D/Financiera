@@ -63,11 +63,9 @@ $result = $stmt->get_result();
                     <th>Fecha</th>
                     <th>Total</th>
                     <th>Cuota</th>
-
                 </tr>
             </thead>
             <tbody>
-
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
                         <td><?= $row['id'] ?></td>
@@ -76,22 +74,20 @@ $result = $stmt->get_result();
                         <td><?= $row['plazo_meses'] ?> meses</td>
                         <td>
                             <span class="badge 
-                    <?= $row['estado'] == 'pendiente' ? 'bg-warning' :
-                        ($row['estado'] == 'aprobado' ? 'bg-success' : 'bg-danger') ?>">
+                            <?= $row['estado'] == 'pendiente' ? 'bg-warning' :
+                                ($row['estado'] == 'aprobado' ? 'bg-success' : 'bg-danger') ?>">
                                 <?= ucfirst($row['estado']) ?>
                             </span>
                         </td>
                         <td><?= $row['fecha_solicitud'] ?></td>
+                        <td>
+                            <?= $row['monto_total'] ? '$' . number_format($row['monto_total'], 2, ',', '.') : '-' ?>
+                        </td>
+                        <td>
+                            <?= $row['cuota_mensual'] ? '$' . number_format($row['cuota_mensual'], 2, ',', '.') : '-' ?>
+                        </td>
                     </tr>
-                    <td>
-                        <?= $row['monto_total'] ? '$' . number_format($row['monto_total'], 2, ',', '.') : '-' ?>
-                    </td>
-                    <td>
-                        <?= $row['cuota_mensual'] ? '$' . number_format($row['cuota_mensual'], 2, ',', '.') : '-' ?>
-                    </td>
-
                 <?php endwhile; ?>
-
             </tbody>
         </table>
 
