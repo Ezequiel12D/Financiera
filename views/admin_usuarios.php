@@ -25,7 +25,7 @@ $result = $conn->query("
 
 <body class="container mt-4">
 
-    <h2 class="mb-4">👥 Administración de Usuarios</h2>
+    <h2 class="mb-4"> Administración de Usuarios</h2>
 
     <table class="table table-bordered table-hover">
         <thead class="table-dark">
@@ -76,7 +76,7 @@ $result = $conn->query("
         </tbody>
     </table>
 
-    <a href="home.php" class="btn btn-secondary mt-3">⬅ Volver</a>
+    <a href="home.php" class="btn btn-secondary mt-3"> Volver</a>
 
 </body>
 

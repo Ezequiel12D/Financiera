@@ -54,7 +54,7 @@ $result = $conn->query($sql);
 
 <body class="container mt-4">
 
-    <h2 class="mb-4">📊 Cuotas de Préstamos Aprobados</h2>
+    <h2 class="mb-4"> Cuotas de Préstamos Aprobados</h2>
 
     <table class="table table-bordered table-hover">
         <thead class="table-dark">
@@ -97,7 +97,7 @@ $result = $conn->query($sql);
         </tbody>
     </table>
 
-    <a href="home.php" class="btn btn-secondary mt-3">⬅ Volver al Home</a>
+    <a href="home.php" class="btn btn-secondary mt-3"> Volver al Home</a>
 
 </body>
 

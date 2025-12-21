@@ -54,52 +54,99 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <title>Detalle del Préstamo</title>
-    <link rel="stylesheet" href="../css/styles_home.css">
+    <link rel="stylesheet" href="../css/banco.css">
 </head>
 
 <body>
-    <h2>Detalle de la Solicitud</h2>
 
-    <div style="max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:8px">
+    <header class="topbar">
+        <h1>Panel de Préstamos</h1>
+    </header>
 
-        <h3>Cliente</h3>
-        <p><strong>Nombre:</strong> <?= $prestamo['nombre'] . ' ' . $prestamo['apellido'] ?></p>
-        <p><strong>Email:</strong> <?= $prestamo['email'] ?></p>
+    <main class="container">
 
-        <hr>
+        <h2>Detalle de la Solicitud</h2>
 
-        <h3>Préstamo</h3>
-        <p><strong>Producto:</strong> <?= $prestamo['producto'] ?></p>
-        <p><strong>Monto:</strong> $<?= number_format($prestamo['monto_solicitado'], 2, ',', '.') ?></p>
-        <p><strong>Plazo:</strong> <?= $prestamo['plazo_meses'] ?> meses</p>
-        <p><strong>Tipo de empleo:</strong> <?= ucfirst($prestamo['tipo_empleo']) ?></p>
-        <p><strong>Ingresos:</strong> $<?= number_format($prestamo['ingresos_mensuales'], 2, ',', '.') ?></p>
-        <p><strong>Motivo:</strong> <?= $prestamo['motivo_prestamo'] ?></p>
-        <p><strong>Estado:</strong> <?= ucfirst($prestamo['estado']) ?></p>
-        <p><strong>Fecha:</strong> <?= $prestamo['fecha_solicitud'] ?></p>
+        <div class="card">
 
-        <?php if ($prestamo['estado'] === 'pendiente'): ?>
-            <form method="post" action="../includes/cambiar_estado.php" style="margin-top:20px">
-                <input type="hidden" name="id" value="<?= $prestamo['id'] ?>">
+            <div class="section">
+                <h3>Datos del Cliente</h3>
 
-                <button type="submit" name="estado" value="aprobado"
-                    style="background:green;color:white;padding:10px 20px;border:none;border-radius:5px">
-                    Aprobar
-                </button>
+                <div class="row">
+                    <div>
+                        <span>Nombre</span>
+                        <p><?= $prestamo['nombre'] . ' ' . $prestamo['apellido'] ?></p>
+                    </div>
+                    <div>
+                        <span>Email</span>
+                        <p><?= $prestamo['email'] ?></p>
+                    </div>
+                </div>
+            </div>
 
-                <button type="submit" name="estado" value="rechazado"
-                    style="background:red;color:white;padding:10px 20px;border:none;border-radius:5px">
-                    Rechazar
-                </button>
-            </form>
-        <?php else: ?>
-            <p><strong> Esta solicitud ya fue procesada.</strong></p>
-        <?php endif; ?>
+            <div class="section">
+                <h3>Datos del Préstamo</h3>
 
-        <br>
-        <a href="admin_solicitudes.php">⬅ Volver al panel</a>
+                <div class="row">
+                    <div>
+                        <span>Producto</span>
+                        <p><?= $prestamo['producto'] ?></p>
+                    </div>
+                    <div>
+                        <span>Monto</span>
+                        <p>$<?= number_format($prestamo['monto_solicitado'], 2, ',', '.') ?></p>
+                    </div>
+                    <div>
+                        <span>Plazo</span>
+                        <p><?= $prestamo['plazo_meses'] ?> meses</p>
+                    </div>
+                    <div>
+                        <span>Ingresos</span>
+                        <p>$<?= number_format($prestamo['ingresos_mensuales'], 2, ',', '.') ?></p>
+                    </div>
+                    <div>
+                        <span>Tipo de empleo</span>
+                        <p><?= ucfirst($prestamo['tipo_empleo']) ?></p>
+                    </div>
+                    <div>
+                        <span>Estado</span>
+                        <p class="estado estado-<?= $prestamo['estado'] ?>">
+                            <?= ucfirst($prestamo['estado']) ?>
+                        </p>
+                    </div>
+                </div>
 
-    </div>
+                <div class="motivo">
+                    <span>Motivo del préstamo</span>
+                    <p><?= $prestamo['motivo_prestamo'] ?></p>
+                </div>
+
+                <p class="fecha">
+                    Fecha de solicitud: <?= $prestamo['fecha_solicitud'] ?>
+                </p>
+            </div>
+
+            <?php if ($prestamo['estado'] === 'pendiente'): ?>
+                <form method="post" action="../includes/cambiar_estado.php" class="acciones">
+                    <input type="hidden" name="id" value="<?= $prestamo['id'] ?>">
+
+                    <button type="submit" name="estado" value="aprobado" class="btn aprobar">
+                        Aprobar
+                    </button>
+
+                    <button type="submit" name="estado" value="rechazado" class="btn rechazar">
+                        Rechazar
+                    </button>
+                </form>
+            <?php else: ?>
+                <p class="procesado">Esta solicitud ya fue procesada.</p>
+            <?php endif; ?>
+
+            <a href="admin_solicitudes.php" class="volver"> Volver al panel</a>
+
+        </div>
+
+    </main>
 
 </body>
 

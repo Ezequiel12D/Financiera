@@ -1,0 +1,144 @@
+body {
+    margin: 0;
+    background: #eef2f5;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1f2937;
+}
+
+.topbar {
+    background: #0a3d62;
+    color: white;
+    padding: 18px 30px;
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #0a3d62;
+}
+
+.card {
+    background: white;
+    border-radius: 6px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section h3 {
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+    color: #0a3d62;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.row span,
+.motivo span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.row p,
+.motivo p {
+    margin: 4px 0 0;
+    font-weight: bold;
+}
+
+.motivo {
+    margin-top: 20px;
+}
+
+.fecha {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* Estado */
+.estado {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.estado-pendiente {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.estado-aprobado {
+    background: #d4edda;
+    color: #155724;
+}
+
+.estado-rechazado {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Acciones */
+.acciones {
+    margin-top: 25px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.aprobar {
+    background: #198754;
+    color: white;
+}
+
+.rechazar {
+    background: #dc3545;
+    color: white;
+}
+
+.aprobar:hover,
+.rechazar:hover {
+    opacity: 0.9;
+}
+
+.procesado {
+    font-weight: bold;
+    color: #555;
+}
+
+/* Volver */
+.volver {
+    display: inline-block;
+    margin-top: 25px;
+    color: #0a3d62;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.volver:hover {
+    text-decoration: underline;
+}

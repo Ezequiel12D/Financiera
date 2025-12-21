@@ -83,12 +83,12 @@ $result = $conn->query($sql);
                     <td><?= $row['fecha_solicitud'] ?></td>
                     <td class="d-flex gap-1">
                         <a href="detalle_prestamo.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">
-                            📄 Detalle
+                             Detalle
                         </a>
 
                         <?php if ($row['estado'] === 'aprobado'): ?>
                             <a href="admin_cuotas.php?prestamo_id=<?= $row['id'] ?>" class="btn btn-info btn-sm">
-                                📆 Cuotas
+                                Cuotas
                             </a>
                         <?php endif; ?>
                     </td>
@@ -99,7 +99,7 @@ $result = $conn->query($sql);
         </tbody>
     </table>
 
-    <a href="home.php" class="btn btn-secondary mt-3">⬅ Volver al Home</a>
+    <a href="home.php" class="btn btn-secondary mt-3">Volver al Home</a>
 
 </body>
 

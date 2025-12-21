@@ -93,7 +93,7 @@ $result = $stmt->get_result();
 
     <?php endif; ?>
 
-    <a href="home.php" class="btn btn-secondary mt-3">⬅ Volver al Home</a>
+    <a href="home.php" class="btn btn-secondary mt-3"> Volver al Home</a>
 
 </body>
 
