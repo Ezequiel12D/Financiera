@@ -1,0 +1,113 @@
+/* ===============================
+   BOTÓN VOLVER AL HOME
+================================ */
+.btn-home {
+    display: inline-block;
+    background-color: #0a3d62;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: capitalize;
+    transition: background 0.3s;
+    margin: 20px auto;
+}
+
+.btn-home:hover {
+    background-color: #094074;
+}
+
+/* Contenedor para centrar el botón */
+.btn-container {
+    text-align: center;
+}
+
+/* ===============================
+   TABLAS ESTANDARIZADAS
+================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    text-transform: none;
+}
+
+table th,
+table td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Encabezados */
+table th {
+    background-color: #0a3d62;
+    color: white;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* Celdas */
+table td {
+    text-transform: none;
+}
+
+/* ===============================
+   BADGES DE ESTADO
+================================ */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.estado-pendiente {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.estado-aprobado {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.estado-rechazado {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    table th {
+        text-align: right;
+    }
+
+    table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+}

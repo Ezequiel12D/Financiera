@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/banco.css">
     <link rel="stylesheet" href="../css/style_calculadora.css">
     <title>Calculadora de Préstamos</title>
 </head>
 
 <body>
-    <header>
+
+    <header class="topbar">
         <h1>Calculadora de Préstamos</h1>
     </header>
 
@@ -28,6 +30,12 @@
             <input type="button" value="Calcular" onclick="calculateLoan()">
         </form>
 
+        <!-- Botón Volver al Home -->
+        <div style="margin-top: 20px; text-align:center;">
+            <a href="home.php" class="btn">Volver al Home</a>
+        </div>
+
+        <!-- Modal de resultados -->
         <div id="result-modal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
@@ -37,7 +45,7 @@
     </section>
 
     <footer>
-        <p>&copy; 2023 Financiera XYZ. Todos los derechos reservados.</p>
+        <p>&copy; 2025 FinancieraYA. Todos los derechos reservados.</p>
     </footer>
 
     <script src="../js/calculadora.js"></script>

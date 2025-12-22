@@ -1,10 +1,17 @@
+/* ===============================
+   BASE
+================================ */
 body {
     margin: 0;
     background: #eef2f5;
     font-family: Arial, Helvetica, sans-serif;
     color: #1f2937;
+    text-transform: none;
 }
 
+/* ===============================
+   TOPBAR
+================================ */
 .topbar {
     background: #0a3d62;
     color: white;
@@ -14,28 +21,27 @@ body {
 .topbar h1 {
     margin: 0;
     font-size: 20px;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
+/* ===============================
+   CONTENEDOR
+================================ */
 .container {
     max-width: 1000px;
     margin: 30px auto;
     padding: 0 20px;
 }
 
+/* ===============================
+   TÍTULOS
+================================ */
 h2 {
     margin-bottom: 20px;
     color: #0a3d62;
-}
-
-.card {
-    background: white;
-    border-radius: 6px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.1);
-}
-
-.section {
-    margin-bottom: 30px;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
 .section h3 {
@@ -43,8 +49,30 @@ h2 {
     border-bottom: 2px solid #e5e7eb;
     padding-bottom: 5px;
     color: #0a3d62;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
+/* ===============================
+   CARD
+================================ */
+.card {
+    background: white;
+    border-radius: 6px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===============================
+   SECCIONES
+================================ */
+.section {
+    margin-bottom: 30px;
+}
+
+/* ===============================
+   GRILLA
+================================ */
 .row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -55,14 +83,19 @@ h2 {
 .motivo span {
     font-size: 12px;
     color: #6b7280;
+    text-transform: none;
 }
 
 .row p,
 .motivo p {
     margin: 4px 0 0;
-    font-weight: bold;
+    font-weight: 600;
+    text-transform: none;
 }
 
+/* ===============================
+   MOTIVO / FECHA
+================================ */
 .motivo {
     margin-top: 20px;
 }
@@ -71,14 +104,19 @@ h2 {
     margin-top: 15px;
     font-size: 13px;
     color: #6b7280;
+    text-transform: none;
 }
 
-/* Estado */
+/* ===============================
+   ESTADOS
+================================ */
 .estado {
     display: inline-block;
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 13px;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
 .estado-pendiente {
@@ -96,7 +134,9 @@ h2 {
     color: #721c24;
 }
 
-/* Acciones */
+/* ===============================
+   ACCIONES
+================================ */
 .acciones {
     margin-top: 25px;
 }
@@ -105,9 +145,10 @@ h2 {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     margin-right: 10px;
+    text-transform: capitalize;
 }
 
 .aprobar {
@@ -126,19 +167,24 @@ h2 {
 }
 
 .procesado {
-    font-weight: bold;
+    font-weight: 600;
     color: #555;
+    text-transform: none;
 }
 
-/* Volver */
+/* ===============================
+   VOLVER
+================================ */
 .volver {
     display: inline-block;
     margin-top: 25px;
     color: #0a3d62;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
 .volver:hover {
     text-decoration: underline;
 }
+

@@ -13,68 +13,42 @@ if (isset($_SESSION['mensaje'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/styles_home.css">
-
     <title>FinancieraYA</title>
+    <link rel="stylesheet" href="../css/styles_home.css">
 </head>
 
 <body>
-
-    <header class="main-header">
-        <div class="header-container">
-
-            <h1 class="logo">FinancieraYA</h1>
-
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="home.php">Inicio</a></li>
-                    <li><a href="../views/solicitud_prestamos.php">Solicitar Préstamo</a></li>
-
-                    <?php if (isset($_SESSION['usuario_id'])): ?>
-
-                        <li>
-                            <a href="historial_prestamos.php" class="btn btn-info">
-                                Mis préstamos
-                            </a>
-                        </li>
-
-                        <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
-                            <li>
-                                <a href="admin_solicitudes.php" class="btn btn-danger">
-                                    Panel Admin
-                                </a>
-                            </li>
-                        <?php endif; ?>
-
-                        <li>
-                            <a href="../includes/logout.php" class="btn-logout">
-                                Cerrar sesión
-                            </a>
-                        </li>
-
-                    <?php else: ?>
-                        <li><a href="login.php" class="btn-login">Iniciar sesión</a></li>
-                        <li><a href="register.php" class="btn-register">Registrarse</a></li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
+    <?php include '../includes/header.php'; ?>
+    <!-- Mensaje de sesión -->
+    <?php if (isset($_SESSION['mensaje'])): ?>
+        <div class="mensaje">
+            <?php
+            echo $_SESSION['mensaje'];
+            unset($_SESSION['mensaje']);
+            ?>
         </div>
-    </header>
+    <?php endif; ?>
 
-    <section id="hero">
-        <h2>Bienvenido a FinancieraYA</h2>
-        <p>Soluciones financieras diseñadas para vos.</p>
-        <a href="../views/solicitud_prestamos.php" class="cta-button">Solicitar Préstamo</a>
-    </section>
+    <!-- Contenedor principal -->
+    <div class="container">
 
-    <section id="about">
-        <h2>Acerca de Nosotros</h2>
-        <p>Brindamos servicios financieros accesibles, rápidos y confiables para ayudarte a crecer.</p>
-    </section>
+        <!-- Hero -->
+        <section id="hero">
+            <h1 class="titulo-principal">Bienvenido a FinancieraYA</h1>
+            <p>Soluciones financieras diseñadas para vos.</p>
+            <a href="../views/solicitud_prestamos.php" class="btn-solicitar">Solicitar Préstamo</a>
+        </section>
 
-    <footer>
-        <p>&copy; 2025 FinancieraYA. Todos los derechos reservados.</p>
-    </footer>
+        <!-- Sección Acerca de -->
+        <div class="card section">
+            <h2 class="titulo-seccion">Acerca de nosotros</h2>
+            <p>Brindamos servicios financieros accesibles, rápidos y confiables para ayudarte a crecer.</p>
+        </div>
+
+    </div>
+
+   <?php include '../includes/footer.php'; ?>
+
 
 </body>
 

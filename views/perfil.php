@@ -67,46 +67,7 @@ $conexion->close();
 
 <body>
 
-    <header class="main-header">
-        <div class="header-container">
-
-            <h1 class="logo">FinancieraYA</h1>
-
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="home.php">Inicio</a></li>
-                    <li><a href="../views/solicitud_prestamos.php">Solicitar Préstamo</a></li>
-
-                    <?php if (isset($_SESSION['usuario_id'])): ?>
-
-                        <li>
-                            <a href="historial_prestamos.php" class="btn btn-info">
-                             Mis préstamos
-                            </a>
-                        </li>
-
-                        <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
-                            <li>
-                                <a href="admin_solicitudes.php" class="btn btn-danger">
-                                    Panel Admin
-                                </a>
-                            </li>
-                        <?php endif; ?>
-
-                        <li>
-                            <a href="../includes/logout.php" class="btn-logout">
-                                Cerrar sesión
-                            </a>
-                        </li>
-
-                    <?php else: ?>
-                        <li><a href="login.php" class="btn-login">Iniciar sesión</a></li>
-                        <li><a href="register.php" class="btn-register">Registrarse</a></li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <?php include '../includes/header.php'; ?>
 
     <!-- Contenido del perfil -->
     <section class="registration-section">

@@ -6,8 +6,8 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     exit("Acceso denegado");
 }
 
-$id = $_GET['id'];
-$estado = $_GET['estado'];
+$id = $_POST['id'];
+$estado = $_POST['estado'];
 
 if (!in_array($estado, ['aprobado', 'rechazado'])) {
     exit("Estado inválido");
@@ -42,7 +42,7 @@ if ($estado === 'aprobado') {
         $fecha_vencimiento = date('Y-m-d', strtotime("+$i month"));
 
         $stmt = $conn->prepare("
-            INSERT INTO cuotas_prestamos 
+            INSERT INTO cuotas_prestamo 
             (prestamo_id, numero_cuota, monto, fecha_vencimiento, estado)
             VALUES (?, ?, ?, ?, 'pendiente')
         ");

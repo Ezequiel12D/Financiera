@@ -26,8 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -36,64 +34,127 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="../css/bootstrap.css" rel="stylesheet" />
   <title>Iniciar Sesión</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #3498db, #1f78c1);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #0a3d62;
+    }
+
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .btn-primary {
+      background-color: #0a3d62;
+      border: none;
+      width: 100%;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #094074;
+    }
+
+    .btn-secondary,
+    .btn-success {
+      border-radius: 8px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .alert {
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .btn-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <section class="">
-    <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
-      <div class="container">
-        <div class="row gx-lg-5 align-items-center">
-          <div class="col-lg-6 mb-5 mb-lg-0">
-            <div class="card">
-              <div class="card-body py-5 px-md-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card">
+          <div class="card-body">
 
-                <div class="mb-4 d-flex justify-content-between">
-                  <a href="home.php" class="btn btn-secondary"> Volver al Home</a>
-                  <a href="register.php" class="btn btn-success">Registrarse</a>
-                </div>
+            <h2>Iniciar Sesión</h2>
 
-                <form method="post" action="login.php">
-                  <div class="row">
-
-                    <div class="form-outline mb-4">
-                      <label class="form-label" for="dni">DNI:</label>
-                      <input type="text" id="dni" name="dni" class="form-control" placeholder="Ingrese aquí" required />
-                    </div>
-
-                    <div class="form-outline mb-4">
-                      <label class="form-label" for="email">E-mail:</label>
-                      <input type="text" id="email" name="email" class="form-control" placeholder="Ingrese aquí"
-                        required />
-                    </div>
-
-                    <div class="form-outline mb-4">
-                      <label class="form-label" for="contrasena">Contraseña:</label>
-                      <input type="password" id="contrasena" name="contrasena" class="form-control"
-                        placeholder="Ingrese aquí" required />
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block mb-4">
-                      Iniciar Sesión
-                    </button>
-
-                  </div>
-                </form>
-
-                <?php if (!empty($errors)): ?>
-                  <div class="alert alert-danger" role="alert">
-                    <?php foreach ($errors as $error): ?>
-                      <p><?php echo $error; ?></p>
-                    <?php endforeach; ?>
-                  </div>
-                <?php endif; ?>
-
-              </div>
+            <div class="btn-container mb-4">
+              <a href="home.php" class="btn btn-secondary">Volver al Home</a>
+              <a href="register.php" class="btn btn-success">Registrarse</a>
             </div>
+
+            <form method="post" action="login.php">
+              <div class="form-outline mb-3">
+                <label class="form-label" for="dni">DNI:</label>
+                <input type="text" id="dni" name="dni" class="form-control" placeholder="Ingrese aquí" required />
+              </div>
+
+              <div class="form-outline mb-3">
+                <label class="form-label" for="email">E-mail:</label>
+                <input type="text" id="email" name="email" class="form-control" placeholder="Ingrese aquí" required />
+              </div>
+
+              <div class="form-outline mb-3">
+                <label class="form-label" for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" class="form-control" placeholder="Ingrese aquí"
+                  required />
+              </div>
+
+              <button type="submit" class="btn btn-primary mb-3">Iniciar Sesión</button>
+            </form>
+
+            <?php if (!empty($errors)): ?>
+              <div class="alert alert-danger" role="alert">
+                <?php foreach ($errors as $error): ?>
+                  <p><?= $error ?></p>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
+
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </body>
 
 </html>

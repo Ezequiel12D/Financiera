@@ -18,29 +18,42 @@ body {
     background: var(--bg);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: var(--text);
+    text-transform: none;
 }
 
+/* ===============================
+   TÍTULOS
+================================ */
 h2 {
     text-align: center;
     margin: 30px 0;
     color: #e5e7eb;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
+h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* ===============================
+   CARD
+================================ */
 .card {
     max-width: 760px;
     margin: 0 auto 50px;
     background: var(--card);
     padding: 30px 35px;
     border-radius: 14px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, .25);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
-h3 {
-    font-size: 18px;
-    margin-bottom: 12px;
-}
-
+/* ===============================
+   SECCIONES
+================================ */
 .section {
     margin-bottom: 25px;
 }
@@ -51,13 +64,18 @@ h3 {
     gap: 15px;
 }
 
+/* Labels normales */
 .label {
     color: var(--muted);
     font-size: 13px;
+    font-weight: 400;
+    text-transform: none;
 }
 
+/* Valores un poco más marcados */
 .value {
     font-weight: 600;
+    text-transform: none;
 }
 
 hr {
@@ -67,13 +85,16 @@ hr {
     margin: 25px 0;
 }
 
-/* Estado */
+/* ===============================
+   ESTADOS
+================================ */
 .badge {
     display: inline-block;
     padding: 6px 14px;
     border-radius: 999px;
     font-size: 13px;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .badge-pendiente {
@@ -91,7 +112,9 @@ hr {
     color: #991b1b;
 }
 
-/* Botones */
+/* ===============================
+   BOTONES
+================================ */
 .actions {
     margin-top: 25px;
     display: flex;
@@ -105,6 +128,7 @@ hr {
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
+    text-transform: capitalize;
 }
 
 .btn-success {
@@ -113,7 +137,7 @@ hr {
 }
 
 .btn-success:hover {
-    opacity: .9;
+    opacity: 0.9;
 }
 
 .btn-danger {
@@ -122,14 +146,17 @@ hr {
 }
 
 .btn-danger:hover {
-    opacity: .9;
+    opacity: 0.9;
 }
 
-/* Link */
+/* ===============================
+   LINK VOLVER
+================================ */
 .back {
     display: inline-block;
     margin-top: 25px;
     color: var(--primary);
     font-weight: 600;
     text-decoration: none;
+    text-transform: capitalize;
 }

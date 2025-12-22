@@ -29,8 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors[] = "Debes seleccionar un producto financiero.";
     }
 
-    if ($monto <= 0) {
-        $errors[] = "El monto no es válido.";
+    if ($monto <= 0 || $monto > 750000) {
+        $errors[] = "El monto debe ser mayor a 0 y máximo $750.000.";
     }
 
     if (empty($errors)) {
@@ -53,10 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         );
 
         if ($stmt->execute()) {
-            header("Location: solicitud_prestamos.php?success=1");
+            $_SESSION['mensaje'] = "Solicitud enviada correctamente. Un asesor se comunicará contigo.";
+            header("Location: home.php");
             exit();
         } else {
-            $errors[] = "Error al guardar la solicitud.";
+            $errors[] = "Error al guardar la solicitud. Intenta nuevamente.";
         }
     }
 }
@@ -67,56 +68,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitud de Préstamo</title>
-    <link href="../css/style_solicitud.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style_solicitud.css">
 </head>
 
 <body>
 
-    <h2>Solicitud de Préstamo</h2>
-
-    <?php if (isset($_GET['success'])): ?>
-        <script>alert("Solicitud enviada correctamente. Un asesor se comunicará contigo.");</script>
-    <?php endif; ?>
-
     <form method="post">
+        <h2>Solicitud de Préstamo</h2>
 
-        <label>Producto financiero:</label>
-        <select name="producto_id" required>
-            <option value="" disabled selected>Seleccionar producto</option>
-            <?php while ($p = $productos->fetch_assoc()): ?>
-                <option value="<?= $p['id'] ?>">
-                    <?= $p['nombre'] ?>
-                </option>
-            <?php endwhile; ?>
-        </select><br>
-
-        <label>Monto (máx $750.000):</label>
-        <input type="number" name="monto" max="750000" required><br>
-
-        <label>Tipo de empleo:</label>
-        <select name="tipo_empleo" required>
-            <option value="relacion_dependencia">Relación de dependencia</option>
-            <option value="relacion_independiente">Independiente</option>
-            <option value="otros">Otros</option>
-            <option value="sin_empleo">Sin empleo</option>
-        </select><br>
-
-        <label>Ingresos mensuales:</label>
-        <input type="number" name="ingresos_mensuales" required><br>
-
-        <label>Motivo del préstamo:</label>
-        <textarea name="motivo_prestamo" required></textarea><br>
-
-        <label>Plazo:</label>
-        <select name="plazo" required>
-            <option value="12">12 meses</option>
-            <option value="24">24 meses</option>
-            <option value="36">36 meses</option>
-        </select><br>
-
-        <button type="submit">Enviar Solicitud</button>
-
+        <!-- Mensajes de error -->
         <?php if (!empty($errors)): ?>
             <div class="error-message">
                 <?php foreach ($errors as $e): ?>
@@ -125,18 +87,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         <?php endif; ?>
 
-    </form>
+        <label for="producto_id">Producto financiero:</label>
+        <select name="producto_id" id="producto_id" required>
+            <option value="" disabled selected>Seleccionar producto</option>
+            <?php while ($p = $productos->fetch_assoc()): ?>
+                <option value="<?= $p['id'] ?>"><?= $p['nombre'] ?></option>
+            <?php endwhile; ?>
+        </select>
 
-    <div style="margin-top:20px">
+        <label for="monto">Monto (máx $750.000):</label>
+        <input type="number" id="monto" name="monto" max="750000" required>
+
+        <label for="tipo_empleo">Tipo de empleo:</label>
+        <select name="tipo_empleo" id="tipo_empleo" required>
+            <option value="relacion_dependencia">Relación de dependencia</option>
+            <option value="relacion_independiente">Independiente</option>
+            <option value="otros">Otros</option>
+            <option value="sin_empleo">Sin empleo</option>
+        </select>
+
+        <label for="ingresos_mensuales">Ingresos mensuales:</label>
+        <input type="number" id="ingresos_mensuales" name="ingresos_mensuales" required>
+
+        <label for="motivo_prestamo">Motivo del préstamo:</label>
+        <textarea id="motivo_prestamo" name="motivo_prestamo" rows="3" placeholder="Escribe el motivo del préstamo"
+            style="resize: none;"></textarea>
+
+
+
+
+        <label for="plazo">Plazo:</label>
+        <select name="plazo" id="plazo" required>
+            <option value="12">12 meses</option>
+            <option value="24">24 meses</option>
+            <option value="36">36 meses</option>
+        </select>
+
+        <button type="submit">Enviar Solicitud</button>
+
         <a href="home.php" style="
-        background:#6c757d;
-        padding:10px 20px;
-        border-radius:6px;
-        color:white;
-        text-decoration:none;
-        font-weight:bold;
-    "> Volver al Home</a>
-    </div>
+            display:block;
+            text-align:center;
+            margin-top:15px;
+            color:white;
+            background:#6c757d;
+            padding:10px;
+            border-radius:4px;
+            text-decoration:none;
+        ">Volver al Home</a>
+
+    </form>
 
 </body>
 

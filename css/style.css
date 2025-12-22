@@ -1,25 +1,52 @@
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 20px;
+/* ===============================
+   BASE / TIPOGRAFÍA UNIFICADA
+================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    color: #1f2937;
+    line-height: 1.6;
+    text-transform: none;
+    /* texto normal */
+}
+
+/* ===============================
+   TÍTULOS
+================================ */
 h1,
 h2 {
     color: #333;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: capitalize;
+    margin-bottom: 10px;
 }
 
+/* ===============================
+   ENLACES
+================================ */
 a {
     color: #007bff;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     display: block;
     margin-bottom: 20px;
+    text-transform: capitalize;
 }
 
 a:hover {
     color: #0056b3;
 }
 
+/* ===============================
+   FORMULARIOS
+================================ */
 form {
     max-width: 400px;
     margin: 20px auto;
@@ -29,6 +56,8 @@ label {
     display: block;
     margin-bottom: 5px;
     color: #333;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
 input {
@@ -36,27 +65,39 @@ input {
     padding: 8px;
     margin-bottom: 15px;
     box-sizing: border-box;
+    text-transform: none;
 }
 
+/* ===============================
+   BOTONES
+================================ */
 button {
-    background-color: #007bff;
+    background-color: #3498db;
+    /* mismo azul del sistema */
     color: #fff;
     padding: 10px;
     border: none;
     cursor: pointer;
     width: 100%;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #2980b9;
 }
 
+/* ===============================
+   MENSAJES
+================================ */
 .error-message,
 .success-message {
     color: #fff;
     padding: 10px;
     border-radius: 5px;
     margin-top: 10px;
+    font-weight: 600;
+    text-transform: none;
 }
 
 .error-message {
@@ -67,6 +108,9 @@ button:hover {
     background-color: #5bc0de;
 }
 
+/* ===============================
+   TABLAS
+================================ */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -79,12 +123,22 @@ td {
     border: 1px solid #ddd;
 }
 
-th,
+th {
+    padding: 10px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
 td {
     padding: 10px;
     text-align: left;
+    text-transform: none;
 }
 
+/* ===============================
+   RESPONSIVE
+================================ */
 @media (min-width: 768px) {
     body {
         margin: 40px;

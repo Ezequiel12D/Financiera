@@ -2,42 +2,44 @@
 session_start();
 include '../includes/db.php';
 
-/* Verificar login */
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: login.php");
+/* ===============================
+   SEGURIDAD: SOLO ADMIN
+================================ */
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
+    header("Location: home.php");
     exit();
 }
 
-/* Verificar rol admin */
-$stmt = $conn->prepare("SELECT rol FROM usuarios WHERE id = ?");
-$stmt->bind_param("i", $_SESSION['usuario_id']);
-$stmt->execute();
-$stmt->bind_result($rol);
-$stmt->fetch();
-$stmt->close();
-
-if ($rol !== 'admin') {
-    echo "Acceso denegado.";
-    exit();
-}
-
-/* Obtener préstamos aprobados */
+/* ===============================
+   CONSULTA
+================================ */
 $sql = "
 SELECT 
+    cp.id AS cuota_id,
+    cp.numero_cuota,
+    cp.monto,
+    cp.fecha_vencimiento,
+    cp.estado,
+
     sp.id AS prestamo_id,
+
     u.nombre,
     u.apellido,
+
     pf.nombre AS producto,
-    sp.monto_solicitado,
-    pf.tasa_interes,
-    sp.plazo_meses,
-    sp.estado,
-    sp.fecha_solicitud
-FROM solicitudes_prestamos sp
+
+    (
+        SELECT COUNT(*) 
+        FROM cuotas_prestamo c2
+        WHERE c2.prestamo_id = sp.id AND c2.estado = 'pagada'
+    ) AS cuotas_pagadas
+
+FROM cuotas_prestamo cp
+JOIN solicitudes_prestamos sp ON cp.prestamo_id = sp.id
 JOIN usuarios u ON sp.usuario_id = u.id
 JOIN productos_financieros pf ON sp.producto_id = pf.id
-WHERE sp.estado = 'aprobado'
-ORDER BY sp.fecha_solicitud DESC
+
+ORDER BY sp.id, cp.numero_cuota
 ";
 
 $result = $conn->query($sql);
@@ -48,56 +50,67 @@ $result = $conn->query($sql);
 
 <head>
     <meta charset="UTF-8">
-    <title>Cuotas y Préstamos</title>
-    <link rel="stylesheet" href="../css/bootstrap.css">
+    <title>Administración de Cuotas</title>
+    <link rel="stylesheet" href="../css/admin.css">
 </head>
 
-<body class="container mt-4">
+<body>
 
-    <h2 class="mb-4"> Cuotas de Préstamos Aprobados</h2>
+    <?php include '../includes/header.php'; ?>
 
-    <table class="table table-bordered table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>Cliente</th>
-                <th>Producto</th>
-                <th>Monto</th>
-                <th>Tasa</th>
-                <th>Plazo</th>
-                <th>Cuota</th>
-                <th>Total a pagar</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container">
 
-            <?php while ($row = $result->fetch_assoc()): ?>
+        <h2>Administración de Cuotas</h2>
 
-                <?php
-                $monto = $row['monto_solicitado'];
-                $tasa = $row['tasa_interes'] / 100;
-                $plazo = $row['plazo_meses'];
-
-                $interes_total = $monto * $tasa;
-                $total_pagar = $monto + $interes_total;
-                $cuota = $total_pagar / $plazo;
-                ?>
-
+        <table>
+            <thead>
                 <tr>
-                    <td><?= $row['nombre'] . " " . $row['apellido'] ?></td>
-                    <td><?= $row['producto'] ?></td>
-                    <td>$<?= number_format($monto, 2, ',', '.') ?></td>
-                    <td><?= $row['tasa_interes'] ?>%</td>
-                    <td><?= $plazo ?> meses</td>
-                    <td>$<?= number_format($cuota, 2, ',', '.') ?></td>
-                    <td>$<?= number_format($total_pagar, 2, ',', '.') ?></td>
+                    <th>Cliente</th>
+                    <th>Producto</th>
+                    <th>Cuota Nº</th>
+                    <th>Monto</th>
+                    <th>Cuotas Pagadas</th>
+                    <th>Vencimiento</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
                 </tr>
+            </thead>
 
-            <?php endwhile; ?>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) ?></td>
+                        <td><?= htmlspecialchars($row['producto']) ?></td>
+                        <td><?= $row['numero_cuota'] ?></td>
+                        <td>$<?= number_format($row['monto'], 2, ',', '.') ?></td>
+                        <td><?= $row['cuotas_pagadas'] ?></td>
+                        <td><?= date('d/m/Y', strtotime($row['fecha_vencimiento'])) ?></td>
+                        <td>
+                            <span
+                                class="estado <?= $row['estado'] === 'pagada' ? 'estado-aprobado' : 'estado-pendiente' ?>">
+                                <?= ucfirst($row['estado']) ?>
+                            </span>
+                        </td>
+                        <td>
+                            <?php if ($row['estado'] === 'pendiente'): ?>
+                                <form action="../includes/marcar_cuota_pagada.php" method="post">
+                                    <input type="hidden" name="cuota_id" value="<?= $row['cuota_id'] ?>">
+                                    <button type="submit" class="btn aprobar">
+                                        Marcar Pagada
+                                    </button>
+                                </form>
+                            <?php else: ?>
+                                —
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
 
-        </tbody>
-    </table>
+    </div>
 
-    <a href="home.php" class="btn btn-secondary mt-3"> Volver al Home</a>
+    <?php include '../includes/footer.php'; ?>
 
 </body>
 
