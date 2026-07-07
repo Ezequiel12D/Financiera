@@ -15,30 +15,7 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
 
 <body>
 
-    <header class="main-header">
-        <div class="header-container">
-            <h1 class="logo">FinancieraYA</h1>
-            <nav>
-                <ul class="nav-links">
-                    <?php if ($pagina_actual !== 'home.php'): ?>
-                        <li><a href="home.php">Inicio</a></li>
-                    <?php endif; ?>
-                    <li><a href="../views/solicitud_prestamos.php">Solicitar Préstamo</a></li>
-
-                    <?php if (isset($_SESSION['usuario_id'])): ?>
-                        <li><a href="historial_prestamos.php" class="btn btn-info">Mis préstamos</a></li>
-                        <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
-                            <li><a href="admin_solicitudes.php" class="btn btn-danger">Panel Admin</a></li>
-                        <?php endif; ?>
-                        <li><a href="../includes/logout.php" class="btn-logout">Cerrar sesión</a></li>
-                    <?php else: ?>
-                        <li><a href="login.php" class="btn-login">Iniciar sesión</a></li>
-                        <li><a href="register.php" class="btn-register">Registrarse</a></li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <?php include '../includes/header.php'; ?>
 
     <section id="privacy" class="section-container">
         <h2>Política de Privacidad</h2>
@@ -64,15 +41,7 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
         <p>Para consultas sobre privacidad, escribí a <strong>contacto@financieraya.com</strong>.</p>
     </section>
 
-    <footer class="main-footer">
-        <div class="footer-container">
-            <p>&copy; 2025 FinancieraYA. Todos los derechos reservados.</p>
-            <div class="footer-links">
-                <a href="privacy.php">Política de Privacidad</a> |
-                <a href="contacto.php">Contacto</a>
-            </div>
-        </div>
-    </footer>
+    <?php include '../includes/footer.php'; ?>
 
 </body>
 

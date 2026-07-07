@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 include 'db.php';
 
@@ -6,59 +7,158 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     exit("Acceso denegado");
 }
 
-$id = $_POST['id'];
-$estado = $_POST['estado'];
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    exit("Método no permitido");
+}
+
+$id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+$estado = $_POST['estado'] ?? '';
+
+if ($id <= 0) {
+    exit("Préstamo inválido");
+}
 
 if (!in_array($estado, ['aprobado', 'rechazado'])) {
     exit("Estado inválido");
 }
 
-/* Cambiar estado del préstamo */
-$stmt = $conn->prepare("UPDATE solicitudes_prestamos SET estado = ? WHERE id = ?");
-$stmt->bind_param("si", $estado, $id);
-$stmt->execute();
-$stmt->close();
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-/* Si se aprueba → generar cuotas */
-if ($estado === 'aprobado') {
+$conn->begin_transaction();
 
-    $sql = "
-    SELECT sp.monto_solicitado, sp.plazo_meses
-    FROM solicitudes_prestamos sp
-    WHERE sp.id = ?
-    ";
+try {
 
-    $stmt = $conn->prepare($sql);
+    // Obtener los datos del préstamo y la tasa de interés
+    $stmt = $conn->prepare("
+        SELECT
+            sp.monto_solicitado,
+            sp.plazo_meses,
+            sp.estado,
+            pf.tasa_interes
+        FROM solicitudes_prestamos sp
+        JOIN productos_financieros pf
+            ON sp.producto_id = pf.id
+        WHERE sp.id = ?
+        FOR UPDATE
+    ");
+
     $stmt->bind_param("i", $id);
     $stmt->execute();
-    $stmt->bind_result($monto, $plazo);
-    $stmt->fetch();
+
+    $resultado = $stmt->get_result();
+
+    if ($resultado->num_rows === 0) {
+        throw new Exception("Solicitud no encontrada");
+    }
+
+    $prestamo = $resultado->fetch_assoc();
     $stmt->close();
 
-    $monto_cuota = $monto / $plazo;
+    if ($prestamo['estado'] !== 'pendiente') {
+        throw new Exception("La solicitud ya fue procesada");
+    }
 
-    for ($i = 1; $i <= $plazo; $i++) {
-
-        $fecha_vencimiento = date('Y-m-d', strtotime("+$i month"));
+    // Si el préstamo es rechazado, solo cambiar el estado
+    if ($estado === 'rechazado') {
 
         $stmt = $conn->prepare("
-            INSERT INTO cuotas_prestamo 
-            (prestamo_id, numero_cuota, monto, fecha_vencimiento, estado)
-            VALUES (?, ?, ?, ?, 'pendiente')
+            UPDATE solicitudes_prestamos
+            SET estado = 'rechazado'
+            WHERE id = ?
+        ");
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+
+    } else {
+
+        $monto = floatval($prestamo['monto_solicitado']);
+        $plazo = intval($prestamo['plazo_meses']);
+        $tasaAnual = floatval($prestamo['tasa_interes']);
+
+        if ($monto <= 0 || $plazo <= 0) {
+            throw new Exception("Los datos del préstamo no son válidos");
+        }
+
+        // Convertir la tasa anual a tasa mensual
+        $tasaMensual = ($tasaAnual / 100) / 12;
+
+        // Calcular cuota fija mensual
+        if ($tasaMensual > 0) {
+            $montoCuota = (
+                $monto * $tasaMensual
+            ) / (
+                1 - pow(1 + $tasaMensual, -$plazo)
+            );
+        } else {
+            $montoCuota = $monto / $plazo;
+        }
+
+        $montoCuota = round($montoCuota, 2);
+        $montoTotal = round($montoCuota * $plazo, 2);
+
+        // Aprobar y guardar los valores calculados
+        $stmt = $conn->prepare("
+            UPDATE solicitudes_prestamos
+            SET
+                estado = 'aprobado',
+                monto_total = ?,
+                cuota_mensual = ?
+            WHERE id = ?
         ");
 
         $stmt->bind_param(
-            "iids",
-            $id,
-            $i,
-            $monto_cuota,
-            $fecha_vencimiento
+            "ddi",
+            $montoTotal,
+            $montoCuota,
+            $id
         );
 
         $stmt->execute();
         $stmt->close();
-    }
-}
 
-header("Location: ../views/admin_solicitudes.php");
-exit();
+        // Crear las cuotas
+        for ($i = 1; $i <= $plazo; $i++) {
+
+            $fechaVencimiento = date(
+                'Y-m-d',
+                strtotime("+$i month")
+            );
+
+            $stmt = $conn->prepare("
+                INSERT INTO cuotas_prestamo
+                (
+                    prestamo_id,
+                    numero_cuota,
+                    monto,
+                    fecha_vencimiento,
+                    estado
+                )
+                VALUES (?, ?, ?, ?, 'pendiente')
+            ");
+
+            $stmt->bind_param(
+                "iids",
+                $id,
+                $i,
+                $montoCuota,
+                $fechaVencimiento
+            );
+
+            $stmt->execute();
+            $stmt->close();
+        }
+    }
+
+    $conn->commit();
+
+    header("Location: ../views/admin_solicitudes.php");
+    exit();
+
+} catch (Exception $e) {
+
+    $conn->rollback();
+
+    exit("Error al procesar el préstamo: " . $e->getMessage());
+}

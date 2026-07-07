@@ -1,6 +1,5 @@
 <?php
 session_start();
-include '../includes/db.php';
 
 $errors = [];
 $success = false;
@@ -11,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dni = $_POST['dni'];
     $telefono = $_POST['telefono'];
     $provincia = $_POST['provincia'];
-    $fechaNacimiento = $_POST['fechaNacimiento'];
+    $fechaNacimiento = $_POST['fecha_nacimiento'];
     $email = $_POST['email'];
     $contrasena = $_POST['contrasena'];
 
@@ -25,8 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors[] = "DNI o Email ya en uso";
     } else {
         $hashed_password = password_hash($contrasena, PASSWORD_DEFAULT);
-
-        $stmt_insert = $conn->prepare("INSERT INTO usuarios (nombre, apellido, dni, telefono, provincia, fechaNacimiento, email, contrasena, rol) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'usuario')");
+        $stmt_insert = $conn->prepare("INSERT INTO usuarios (nombre, apellido, dni, telefono, provincia, fecha_nacimiento, email, contrasena, rol) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'usuario')");
         $stmt_insert->bind_param("ssssssss", $nombre, $apellido, $dni, $telefono, $provincia, $fechaNacimiento, $email, $hashed_password);
         if ($stmt_insert->execute()) {
             $success = true;
@@ -56,14 +54,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="card-body">
                     <h2 class="text-center mb-4">Registro de Usuario</h2>
 
-                    <!-- Botones debajo del título -->
                     <div class="btn-container mb-4">
                         <a href="home.php" class="btn btn-secondary">Volver al Home</a>
                         <a href="login.php" class="btn btn-primary">Ya tengo cuenta</a>
                     </div>
 
-                    <!-- Formulario -->
-                    <form id="register-form" action="../includes/guardar_usuario.php" method="post">
+                    <?php if (!empty($errors)): ?>
+                        <div class="alert alert-danger">
+                            <?php foreach ($errors as $error)
+                                echo "<p>$error</p>"; ?>
+                        </div>
+                    <?php elseif ($success): ?>
+                        <div class="alert alert-success">
+                            Registro exitoso. <a href="login.php">Iniciar sesión</a>
+                        </div>
+                    <?php endif; ?>
+
+                    <form id="register-form" action="register.php" method="post">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Nombre/s:</label>
@@ -77,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <div class="form-group mb-3">
                             <label>DNI:</label>
-                            <input type="text" name="dni" id="dni" class="form-control form-control-lg" required>
+                            <input type="text" name="dni" id="dni" class="form-control" required>
                             <small id="dni-error" class="text-danger" style="display:none;"></small>
                         </div>
 
@@ -103,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <div class="form-group mb-3">
                             <label>Correo electrónico:</label>
-                            <input type="email" name="email" id="email" class="form-control form-control-lg" required>
+                            <input type="email" name="email" id="email" class="form-control" required>
                             <small id="email-error" class="text-danger" style="display:none;"></small>
                         </div>
 

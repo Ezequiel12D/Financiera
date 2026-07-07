@@ -2,7 +2,9 @@
 session_start();
 include '../includes/db.php';
 
-/* Verificar login */
+/* ===============================
+   Seguridad: Usuario logueado
+================================ */
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
@@ -10,7 +12,9 @@ if (!isset($_SESSION['usuario_id'])) {
 
 $usuario_id = $_SESSION['usuario_id'];
 
-/* Obtener solicitudes del usuario con cuotas pagadas y próximo vencimiento */
+/* ===============================
+   Consultar préstamos del usuario
+================================ */
 $sql = "
 SELECT 
     sp.id,
@@ -109,6 +113,15 @@ $result = $stmt->get_result();
             background-color: #094074;
         }
 
+        a.detalle {
+            color: #0a3d62;
+            text-decoration: underline;
+        }
+
+        a.detalle:hover {
+            color: #062a44;
+        }
+
         @media (max-width: 768px) {
 
             table,
@@ -133,7 +146,7 @@ $result = $stmt->get_result();
             table td::before {
                 content: attr(data-label);
                 position: absolute;
-                left: 10px;
+                left: 15px;
                 font-weight: bold;
             }
         }
@@ -168,27 +181,31 @@ $result = $stmt->get_result();
             <tbody>
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
-                        <td data-label="ID"><?= $row['id'] ?></td>
-                        <td data-label="Producto"><?= $row['producto'] ?></td>
+                        <td data-label="ID">
+                            <a href="detalle_prestamo.php?id=<?= $row['id'] ?>" class="detalle">
+                                <?= htmlspecialchars($row['id']) ?>
+                            </a>
+                        </td>
+                        <td data-label="Producto"><?= htmlspecialchars($row['producto']) ?></td>
                         <td data-label="Monto">$<?= number_format($row['monto_solicitado'], 2, ',', '.') ?></td>
-                        <td data-label="Plazo"><?= $row['plazo_meses'] ?> meses</td>
+                        <td data-label="Plazo"><?= intval($row['plazo_meses']) ?> meses</td>
                         <td data-label="Estado">
                             <span class="badge 
                                 <?= $row['estado'] === 'pendiente' ? 'estado-pendiente' :
                                     ($row['estado'] === 'aprobado' ? 'estado-aprobado' : 'estado-rechazado') ?>">
-                                <?= ucfirst($row['estado']) ?>
+                                <?= htmlspecialchars(ucfirst($row['estado'])) ?>
                             </span>
                         </td>
-                        <td data-label="Fecha"><?= $row['fecha_solicitud'] ?></td>
+                        <td data-label="Fecha"><?= date('d/m/Y', strtotime($row['fecha_solicitud'])) ?></td>
                         <td data-label="Total">
                             <?= $row['monto_total'] ? '$' . number_format($row['monto_total'], 2, ',', '.') : '-' ?>
                         </td>
                         <td data-label="Cuota">
                             <?= $row['cuota_mensual'] ? '$' . number_format($row['cuota_mensual'], 2, ',', '.') : '-' ?>
                         </td>
-                        <td data-label="Cuotas Pagadas"><?= $row['cuotas_pagadas'] ?></td>
+                        <td data-label="Cuotas Pagadas"><?= intval($row['cuotas_pagadas']) ?></td>
                         <td data-label="Próximo Vencimiento">
-                            <?= $row['proximo_vencimiento'] ? $row['proximo_vencimiento'] : '-' ?>
+                            <?= $row['proximo_vencimiento'] ? date('d/m/Y', strtotime($row['proximo_vencimiento'])) : '-' ?>
                         </td>
                     </tr>
                 <?php endwhile; ?>

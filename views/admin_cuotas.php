@@ -2,17 +2,31 @@
 session_start();
 include '../includes/db.php';
 
-/* ===============================
-   SEGURIDAD: SOLO ADMIN
-================================ */
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     header("Location: home.php");
     exit();
 }
 
-/* ===============================
-   CONSULTA
-================================ */
+
+$prestamo_id = isset($_GET['prestamo_id']) ? intval($_GET['prestamo_id']) : 0;
+
+if ($prestamo_id <= 0) {
+    header("Location: admin_solicitudes.php");
+    exit();
+}
+
+$limit = 20;
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$offset = ($page - 1) * $limit;
+
+$totalResult = $conn->query("
+    SELECT COUNT(*) AS total
+    FROM cuotas_prestamo
+    WHERE prestamo_id = $prestamo_id
+");
+$totalRows = $totalResult->fetch_assoc()['total'];
+$totalPages = ceil($totalRows / $limit);
+
 $sql = "
 SELECT 
     cp.id AS cuota_id,
@@ -20,26 +34,22 @@ SELECT
     cp.monto,
     cp.fecha_vencimiento,
     cp.estado,
-
-    sp.id AS prestamo_id,
-
     u.nombre,
     u.apellido,
-
     pf.nombre AS producto,
-
     (
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
         FROM cuotas_prestamo c2
-        WHERE c2.prestamo_id = sp.id AND c2.estado = 'pagada'
+        WHERE c2.prestamo_id = cp.prestamo_id
+        AND c2.estado = 'pagada'
     ) AS cuotas_pagadas
-
 FROM cuotas_prestamo cp
 JOIN solicitudes_prestamos sp ON cp.prestamo_id = sp.id
 JOIN usuarios u ON sp.usuario_id = u.id
 JOIN productos_financieros pf ON sp.producto_id = pf.id
-
-ORDER BY sp.id, cp.numero_cuota
+WHERE cp.prestamo_id = $prestamo_id
+ORDER BY cp.numero_cuota
+LIMIT $limit OFFSET $offset
 ";
 
 $result = $conn->query($sql);
@@ -59,7 +69,6 @@ $result = $conn->query($sql);
     <?php include '../includes/header.php'; ?>
 
     <div class="container">
-
         <h2>Administración de Cuotas</h2>
 
         <table>
@@ -95,9 +104,7 @@ $result = $conn->query($sql);
                             <?php if ($row['estado'] === 'pendiente'): ?>
                                 <form action="../includes/marcar_cuota_pagada.php" method="post">
                                     <input type="hidden" name="cuota_id" value="<?= $row['cuota_id'] ?>">
-                                    <button type="submit" class="btn aprobar">
-                                        Marcar Pagada
-                                    </button>
+                                    <button type="submit" class="btn aprobar">Marcar Pagada</button>
                                 </form>
                             <?php else: ?>
                                 —
@@ -108,6 +115,21 @@ $result = $conn->query($sql);
             </tbody>
         </table>
 
+        <div class="pagination">
+            <a href="?prestamo_id=<?= $prestamo_id ?>&page=<?= max(1, $page - 1) ?>"
+                class="<?= $page == 1 ? 'disabled' : '' ?>">&laquo; Anterior</a>
+
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <a href="?prestamo_id=<?= $prestamo_id ?>&page=<?= $i ?>" class="<?= $i == $page ? 'active' : '' ?>">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+
+            <a href="?prestamo_id=<?= $prestamo_id ?>&page=<?= min($totalPages, $page + 1) ?>"
+                class="<?= $page == $totalPages ? 'disabled' : '' ?>">
+                Siguiente &raquo;
+            </a>
+        </div>
     </div>
 
     <?php include '../includes/footer.php'; ?>
