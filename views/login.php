@@ -1,44 +1,90 @@
 <?php
+
 session_start();
-include '../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 $errors = [];
+$email = '';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  $dni = trim($_POST['dni']);
-  $email = trim($_POST['email']);
-  $contrasena = $_POST['contrasena'];
+  $email = trim($_POST['email'] ?? '');
+  $contrasena = $_POST['contrasena'] ?? '';
 
-  if (empty($dni) || empty($email) || empty($contrasena)) {
-    $errors[] = "Todos los campos son obligatorios.";
+  if ($email === '' || $contrasena === '') {
+
+    $errors[] = 'Todos los campos son obligatorios.';
+
+  } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+    $errors[] = 'Ingresá un correo electrónico válido.';
+
   } else {
-    $stmt = $conn->prepare("SELECT id, contrasena, rol FROM usuarios WHERE dni = ? AND email = ?");
-    $stmt->bind_param("ss", $dni, $email);
-    $stmt->execute();
-    $stmt->bind_result($usuario_id, $hashed_password, $rol);
-    $stmt->fetch();
-    $stmt->close();
 
-    if ($usuario_id && password_verify($contrasena, $hashed_password)) {
-      $_SESSION['usuario_id'] = $usuario_id;
-      $_SESSION['rol'] = $rol;
-      header("Location: home.php");
-      exit();
+    $stmt = $conn->prepare("
+            SELECT id, contrasena, rol, activo
+            FROM usuarios
+            WHERE email = ?
+            LIMIT 1
+        ");
+
+    if (!$stmt) {
+
+      $errors[] = 'Error al preparar el inicio de sesión.';
+
     } else {
-      $errors[] = "Credenciales incorrectas. Verifica DNI, correo y contraseña.";
+
+      $stmt->bind_param('s', $email);
+      $stmt->execute();
+
+      $stmt->bind_result(
+        $usuarioId,
+        $contrasenaGuardada,
+        $rol,
+        $activo
+      );
+
+      if (
+        $stmt->fetch() &&
+        intval($activo) === 1 &&
+        password_verify($contrasena, $contrasenaGuardada)
+      ) {
+
+        session_regenerate_id(true);
+
+        $_SESSION['usuario_id'] = $usuarioId;
+        $_SESSION['rol'] = $rol;
+
+        $stmt->close();
+
+        header('Location: home.php');
+        exit();
+
+      } else {
+
+        $errors[] = 'Correo electrónico o contraseña incorrectos.';
+
+      }
+
+      $stmt->close();
     }
   }
 }
+
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Iniciar Sesión - FinancieraYA</title>
-  <link href="../css/bootstrap.css" rel="stylesheet" />
+
+  <link href="../css/bootstrap.css" rel="stylesheet">
+
   <style>
     body {
       background: linear-gradient(135deg, #3498db, #1f78c1);
@@ -46,7 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
 
     .card {
@@ -103,8 +150,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       gap: 10px;
     }
 
+    .btn-container .btn {
+      flex: 1;
+    }
+
     .alert {
       margin-top: 1rem;
+    }
+
+    .alert p {
+      margin-bottom: 5px;
+    }
+
+    .alert p:last-child {
+      margin-bottom: 0;
     }
 
     @media (max-width: 576px) {
@@ -116,26 +175,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+
   <div class="card">
+
     <div class="card-body">
+
       <h2>Iniciar Sesión</h2>
 
       <div class="btn-container">
-        <a href="home.php" class="btn btn-secondary">Volver al Home</a>
-        <a href="register.php" class="btn btn-success">Registrarse</a>
+
+        <a href="home.php" class="btn btn-secondary">
+          Volver al Home
+        </a>
+
+        <a href="register.php" class="btn btn-success">
+          Registrarse
+        </a>
+
       </div>
 
       <form method="post" action="login.php">
 
         <div class="form-outline mb-3">
-          <label class="form-label" for="email">E-mail:</label>
-          <input type="email" id="email" name="email" class="form-control" placeholder="Ingrese aquí" required />
+
+          <label class="form-label" for="email">
+            E-mail:
+          </label>
+
+          <input type="email" id="email" name="email" class="form-control" placeholder="Ingrese su correo"
+            value="<?= htmlspecialchars($email) ?>" autocomplete="email" required>
+
         </div>
 
         <div class="form-outline mb-3">
-          <label class="form-label" for="contrasena">Contraseña:</label>
-          <input type="password" id="contrasena" name="contrasena" class="form-control" placeholder="Ingrese aquí"
-            required />
+
+          <label class="form-label" for="contrasena">
+            Contraseña:
+          </label>
+
+          <input type="password" id="contrasena" name="contrasena" class="form-control"
+            placeholder="Ingrese su contraseña" autocomplete="current-password" required>
+
         </div>
 
         <button type="submit" class="btn btn-primary mb-3">
@@ -143,15 +223,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </button>
 
       </form>
+
       <?php if (!empty($errors)): ?>
+
         <div class="alert alert-danger" role="alert">
+
           <?php foreach ($errors as $error): ?>
-            <p><?= htmlspecialchars($error) ?></p>
+
+            <p>
+              <?= htmlspecialchars($error) ?>
+            </p>
+
           <?php endforeach; ?>
+
         </div>
+
       <?php endif; ?>
+
     </div>
+
   </div>
+
 </body>
 
 </html>

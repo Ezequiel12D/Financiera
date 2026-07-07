@@ -1,73 +1,170 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido'];
-    $dni = $_POST['dni'];
-    $telefono = $_POST['telefono'];
-    $provincia = $_POST['provincia'];
-    $fecha_nacimiento = $_POST['fechaNacimiento'];
-    $email = $_POST['email'];
-    $pass = $_POST['contrasena'];
+session_start();
 
-    $conexion = new mysqli("localhost", "root", "", "financiera");
+require_once __DIR__ . '/db.php';
 
-    if ($conexion->connect_error) {
-        die("Conexión fallida: " . $conexion->connect_error);
-    }
-
-    // Verificar email
-    $stmt = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->bind_result($count_email);
-    $stmt->fetch();
-    $stmt->close();
-
-    if ($count_email > 0) {
-        echo "<script>alert('El email ya está registrado'); window.location='../views/register.php';</script>";
-        exit;
-    }
-
-    // Verificar DNI
-    $stmt = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE dni = ?");
-    $stmt->bind_param("s", $dni);
-    $stmt->execute();
-    $stmt->bind_result($count_dni);
-    $stmt->fetch();
-    $stmt->close();
-
-    if ($count_dni > 0) {
-        echo "<script>alert('El DNI ya está registrado'); window.location='../views/register.php';</script>";
-        exit;
-    }
-
-    // Insertar usuario
-    $pass_hash = password_hash($pass, PASSWORD_DEFAULT);
-
-    $stmt = $conexion->prepare("INSERT INTO usuarios 
-        (nombre, apellido, dni, telefono, provincia, fecha_nacimiento, email, contrasena, saldo)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)");
-
-    $stmt->bind_param(
-        "ssssssss",
-        $nombre,
-        $apellido,
-        $dni,
-        $telefono,
-        $provincia,
-        $fecha_nacimiento,
-        $email,
-        $pass_hash
-    );
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Usuario registrado con éxito'); window.location='../views/login.php';</script>";
-    } else {
-        echo "Error al guardar: " . $stmt->error;
-    }
-
-    $stmt->close();
-    $conexion->close();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: ../views/register.php');
+    exit();
 }
+
+$nombre = trim($_POST['nombre'] ?? '');
+$apellido = trim($_POST['apellido'] ?? '');
+$dni = trim($_POST['dni'] ?? '');
+$telefono = trim($_POST['telefono'] ?? '');
+$provincia = trim($_POST['provincia'] ?? '');
+$fechaNacimiento = $_POST['fechaNacimiento'] ?? '';
+$email = trim($_POST['email'] ?? '');
+$contrasena = $_POST['contrasena'] ?? '';
+
+if (
+    $nombre === '' ||
+    $apellido === '' ||
+    $dni === '' ||
+    $telefono === '' ||
+    $provincia === '' ||
+    $fechaNacimiento === '' ||
+    $email === '' ||
+    $contrasena === ''
+) {
+    echo "
+        <script>
+            alert('Todos los campos son obligatorios');
+            window.location='../views/register.php';
+        </script>
+    ";
+    exit();
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo "
+        <script>
+            alert('El correo electrónico no es válido');
+            window.location='../views/register.php';
+        </script>
+    ";
+    exit();
+}
+
+/* Verificar si el correo ya existe */
+
+$stmt = $conn->prepare("
+    SELECT id
+    FROM usuarios
+    WHERE email = ?
+    LIMIT 1
+");
+
+$stmt->bind_param('s', $email);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows > 0) {
+    $stmt->close();
+
+    echo "
+        <script>
+            alert('El correo electrónico ya está registrado');
+            window.location='../views/register.php';
+        </script>
+    ";
+    exit();
+}
+
+$stmt->close();
+
+/* Verificar si el DNI ya existe */
+
+$stmt = $conn->prepare("
+    SELECT id
+    FROM usuarios
+    WHERE dni = ?
+    LIMIT 1
+");
+
+$stmt->bind_param('s', $dni);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows > 0) {
+    $stmt->close();
+
+    echo "
+        <script>
+            alert('El DNI ya está registrado');
+            window.location='../views/register.php';
+        </script>
+    ";
+    exit();
+}
+
+$stmt->close();
+
+/* Encriptar contraseña */
+
+$contrasenaHash = password_hash(
+    $contrasena,
+    PASSWORD_DEFAULT
+);
+
+/* Guardar usuario */
+
+$stmt = $conn->prepare("
+    INSERT INTO usuarios
+    (
+        nombre,
+        apellido,
+        dni,
+        telefono,
+        provincia,
+        fecha_nacimiento,
+        email,
+        contrasena,
+        saldo,
+        rol
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 'usuario')
+");
+
+$stmt->bind_param(
+    'ssssssss',
+    $nombre,
+    $apellido,
+    $dni,
+    $telefono,
+    $provincia,
+    $fechaNacimiento,
+    $email,
+    $contrasenaHash
+);
+
+if ($stmt->execute()) {
+
+    $usuarioId = $conn->insert_id;
+
+    session_regenerate_id(true);
+
+    $_SESSION['usuario_id'] = $usuarioId;
+    $_SESSION['rol'] = 'usuario';
+
+    $stmt->close();
+    $conn->close();
+
+    header('Location: ../views/home.php');
+    exit();
+
+} else {
+
+    echo "
+        <script>
+            alert('Ocurrió un error al registrar el usuario');
+            window.location='../views/register.php';
+        </script>
+    ";
+}
+
+$stmt->close();
+$conn->close();
+
 ?>
